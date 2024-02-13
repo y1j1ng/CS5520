@@ -10,12 +10,22 @@ export default function GoalItem({ goalObj, deleteFunction, detailFunction }) {
     detailFunction(goalObj);
   }
   return (
-    <Pressable onPress={goalPressHandler}>
-      <View style={styles.textContainer}>
+    <View>
+      <Pressable
+        // style={({ pressed }) => {
+        //   return { opacity: pressed ? 0.5 : 1 };
+        // }}
+
+        style={({ pressed }) => {
+          return [styles.textContainer, pressed && styles.pressed];
+        }}
+        onPress={goalPressHandler}
+        android_ripple={{ color: "#e9e" }}
+      >
         <Text style={styles.text}>{goalObj.text}</Text>
         <Button color="black" title="X" onPress={deleteHandler} />
-      </View>
-    </Pressable>
+      </Pressable>
+    </View>
   );
 }
 
@@ -33,5 +43,9 @@ const styles = StyleSheet.create({
     marginTop: 15,
     flexDirection: "row",
     alignItems: "center",
+  },
+  pressed: {
+    opacity: 0.5,
+    backgroundColor: "#e9e",
   },
 });

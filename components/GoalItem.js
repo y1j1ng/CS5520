@@ -23,7 +23,10 @@ export default function GoalItem({ goalObj, deleteFunction, detailFunction }) {
         android_ripple={{ color: "#e9e" }}
       >
         <Text style={styles.text}>{goalObj.text}</Text>
-        <Button color="black" title="X" onPress={deleteHandler} />
+        <PressableButton onPressFunction={deleteHandler}>
+          <Text>X</Text>
+        </PressableButton>
+        {/* <Button color="black" title="X" onPress={deleteHandler} /> */}
       </Pressable>
     </View>
   );

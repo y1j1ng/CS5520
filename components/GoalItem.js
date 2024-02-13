@@ -1,5 +1,6 @@
 import { Button, StyleSheet, Text, View } from "react-native";
 import React from "react";
+import { Pressable } from "react-native";
 
 export default function GoalItem({ goalObj, deleteFunction, detailFunction }) {
   function deleteHandler() {
@@ -9,12 +10,12 @@ export default function GoalItem({ goalObj, deleteFunction, detailFunction }) {
     detailFunction(goalObj);
   }
   return (
-    <View style={styles.textContainer}>
-      <Text style={styles.text}>{goalObj.text}</Text>
-
-      <Button color="black" title="X" onPress={deleteHandler} />
-      <Button color="black" title="i" onPress={goalPressHandler} />
-    </View>
+    <Pressable onPress={goalPressHandler}>
+      <View style={styles.textContainer}>
+        <Text style={styles.text}>{goalObj.text}</Text>
+        <Button color="black" title="X" onPress={deleteHandler} />
+      </View>
+    </Pressable>
   );
 }
 

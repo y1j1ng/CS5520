@@ -8,12 +8,12 @@ export default function PressableButton({
 }) {
   return (
     <Pressable
+      onPress={onPressFunction}
       style={({ pressed }) => [
         styles.defaultStyle,
         customStyle,
-        pressed && styles.press,
+        pressed && styles.pressed,
       ]}
-      onPress={onPressFunction}
     >
       {children}
     </Pressable>
@@ -22,9 +22,11 @@ export default function PressableButton({
 
 const styles = StyleSheet.create({
   defaultStyle: {
+    borderRadius: 5,
+    padding: 5,
     backgroundColor: "#aaa",
   },
-  press: {
-    backgroundColor: "white",
+  pressed: {
+    opacity: 0.5,
   },
 });

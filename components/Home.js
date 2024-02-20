@@ -10,12 +10,30 @@ import {
   FlatList,
 } from "react-native";
 import Header from "./Header";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Input from "./Input";
 import GoalItem from "./GoalItem";
 import PressableButton from "./PressableButton";
+import { database } from "../firebase-files/firebaseSetup";
+import { deleteFromDB, writeToDB } from "../firebase-files/firestoreHelper";
+import { collection, onSnapshot } from "firebase/firestore";
 
 export default function Home({ navigation }) {
+  useEffect(() => {
+    onSnapshot(collection(database, "goals"), (querySnapshot) => {
+      if (querySnapshot.empty) {
+        Alert.alert("You need to add something");
+        return;
+      }
+
+      let newArray = [];
+      querySnapshot.forEach((doc) => {
+        newArray.push({ ...doc.data(), id: doc.id });
+        // doc.data() is never undefined for query doc snapshots
+      });
+      setGoals(newArray);
+    });
+  }, []);
   const appName = "My awesome app";
   // const [text, setText] = useState("");
   const [goals, setGoals] = useState([]);
@@ -25,16 +43,19 @@ export default function Home({ navigation }) {
     // setText(data);
     //1. define a new object {text:.., id:..} and store data in object's text
     // 2. use Math.random() to set the object's id
-    const newGoal = { text: data, id: Math.random() };
+    // const newGoal = { text: data, id: Math.random() };
+    //don't need id anymore as Firestore is assigning one automatically
+    const newGoal = { text: data };
     // const newArray = [...goals, newGoal];
     //setGoals (newArray)
     //use updater function whenever we are updating state variables based on the current value
-    setGoals((currentGoals) => [...currentGoals, newGoal]);
+    // setGoals((currentGoals) => [...currentGoals, newGoal]);
 
     // 3. how do I add this object to goals array?
     setIsModalVisible(false);
     //use this to update the text showing in the
     //Text component
+    writeToDB(newGoal);
   }
   function dismissModal() {
     setIsModalVisible(false);
@@ -49,11 +70,13 @@ export default function Home({ navigation }) {
     //use updater function whenever we are updating state variables based on the current value
 
     // setGoals(updatedArray);
-    setGoals((currentGoals) => {
-      return currentGoals.filter((goal) => {
-        return goal.id !== deletedId;
-      });
-    });
+
+    // setGoals((currentGoals) => {
+    //   return currentGoals.filter((goal) => {
+    //     return goal.id !== deletedId;
+    //   });
+    // });
+    deleteFromDB(deletedId);
   }
 
   function goalPressHandler(goalItem) {

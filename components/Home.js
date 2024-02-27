@@ -21,19 +21,26 @@ import { collection, onSnapshot } from "firebase/firestore";
 
 export default function Home({ navigation }) {
   useEffect(() => {
-    onSnapshot(collection(database, "goals"), (querySnapshot) => {
-      if (querySnapshot.empty) {
-        Alert.alert("You need to add something");
-        return;
-      }
+    const unsubscribe = onSnapshot(
+      collection(database, "goals"),
+      (querySnapshot) => {
+        if (querySnapshot.empty) {
+          Alert.alert("You need to add something");
+          return;
+        }
 
-      let newArray = [];
-      querySnapshot.forEach((doc) => {
-        newArray.push({ ...doc.data(), id: doc.id });
-        // doc.data() is never undefined for query doc snapshots
-      });
-      setGoals(newArray);
-    });
+        let newArray = [];
+        querySnapshot.forEach((doc) => {
+          newArray.push({ ...doc.data(), id: doc.id });
+          // doc.data() is never undefined for query doc snapshots
+        });
+        setGoals(newArray);
+
+        return () => {
+          unsubscribe();
+        };
+      }
+    );
   }, []);
   const appName = "My awesome app";
   // const [text, setText] = useState("");

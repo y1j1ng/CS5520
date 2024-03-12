@@ -1,9 +1,9 @@
 {
   "expo": {
-    "name": "CS5520-Spring2024-1",
-    "slug": "CS5520-Spring2024-1",
+    "name": "CS5520-Spring2024",
+    "slug": "CS5520-Spring2024",
     "version": "1.0.0",
-    "orientation": "portrait",
+    "orientation": "default",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
@@ -11,9 +11,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },

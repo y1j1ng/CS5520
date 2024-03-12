@@ -11,16 +11,18 @@ import {
   Alert,
 } from "react-native";
 import Header from "./Header";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import Input from "./Input";
 import GoalItem from "./GoalItem";
 import PressableButton from "./PressableButton";
-import { database } from "../firebase-files/firebaseSetup";
-import { deleteFromDB, writeToDB } from "../firebase-files/firestoreHelper";
 import { collection, onSnapshot } from "firebase/firestore";
 
+import { deleteFromDB, writeToDB } from "../firebase-files/firestoreHelper";
+import { database } from "../firebase-files/firebaseSetup";
 export default function Home({ navigation }) {
+  function cleanup() {}
   useEffect(() => {
+    // set up a listener to get realtime data from firestore - only after the first render
     const unsubscribe = onSnapshot(
       collection(database, "goals"),
       (querySnapshot) => {
@@ -28,19 +30,23 @@ export default function Home({ navigation }) {
           Alert.alert("You need to add something");
           return;
         }
-
+        // loop through this querySnapshot (forEach) => a bunch of docSnapshot
+        // call .data() on each documentsnapshot
         let newArray = [];
         querySnapshot.forEach((doc) => {
+          // update this to also add id of doc to the newArray
           newArray.push({ ...doc.data(), id: doc.id });
-          // doc.data() is never undefined for query doc snapshots
+          // store this data in a new array
         });
+        // console.log(newArray);
+        //updating the goals array with the new array
         setGoals(newArray);
-
-        return () => {
-          unsubscribe();
-        };
       }
     );
+    return () => {
+      console.log("unsubscribe");
+      unsubscribe();
+    };
   }, []);
   const appName = "My awesome app";
   // const [text, setText] = useState("");
@@ -63,7 +69,7 @@ export default function Home({ navigation }) {
     setIsModalVisible(false);
     //use this to update the text showing in the
     //Text component
-    writeToDB(newGoal);
+    writeToDB(newGoal, "goals");
   }
   function dismissModal() {
     setIsModalVisible(false);
@@ -78,7 +84,6 @@ export default function Home({ navigation }) {
     //use updater function whenever we are updating state variables based on the current value
 
     // setGoals(updatedArray);
-
     // setGoals((currentGoals) => {
     //   return currentGoals.filter((goal) => {
     //     return goal.id !== deletedId;

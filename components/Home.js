@@ -15,16 +15,20 @@ import { useState, useEffect } from "react";
 import Input from "./Input";
 import GoalItem from "./GoalItem";
 import PressableButton from "./PressableButton";
-import { collection, onSnapshot } from "firebase/firestore";
-
+import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { deleteFromDB, writeToDB } from "../firebase-files/firestoreHelper";
-import { database } from "../firebase-files/firebaseSetup";
+import { database, auth } from "../firebase-files/firebaseSetup";
+
 export default function Home({ navigation }) {
   function cleanup() {}
   useEffect(() => {
     // set up a listener to get realtime data from firestore - only after the first render
-    const unsubscribe = onSnapshot(
+    const q = query(
       collection(database, "goals"),
+      where("owner", "==", auth.currentUser.uid)
+    );
+    const unsubscribe = onSnapshot(
+      q,
       (querySnapshot) => {
         if (querySnapshot.empty) {
           Alert.alert("You need to add something");
@@ -41,6 +45,9 @@ export default function Home({ navigation }) {
         // console.log(newArray);
         //updating the goals array with the new array
         setGoals(newArray);
+      },
+      (error) => {
+        Alert.alert(error.message);
       }
     );
     return () => {

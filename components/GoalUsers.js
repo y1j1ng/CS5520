@@ -9,7 +9,7 @@ export default function GoalUsers({ id }) {
       try {
         const usersFromDB = await getAllDocs(`goals/${id}/users`);
         console.log(usersFromDB);
-        if (usersFromDB.length) {
+        if (usersFromDB) {
           setUsers(usersFromDB);
           return;
         }

@@ -59,8 +59,8 @@ export default function Home({ navigation }) {
   // const [text, setText] = useState("");
   const [goals, setGoals] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  function receiveInput(data) {
-    // console.log("recieve input ", data);
+  function receiveInput(data, imageUri) {
+    console.log("we are in Home ", imageUri);
     // setText(data);
     //1. define a new object {text:.., id:..} and store data in object's text
     // 2. use Math.random() to set the object's id
